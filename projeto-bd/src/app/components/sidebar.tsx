@@ -10,22 +10,24 @@ import { usePathname } from "next/navigation";
 export default function Sidebar() {
 	const pathname = usePathname();
 
+	const selectedProps = "bg-slate-800 shadow-md";
+
 	return (
-		<menu className="w-72 gap-6 overflow-hidden bg-gray-950 h-full relative flex flex-col py-10 px-3 items-center top-0 left-0 rounded-r-3xl ">
+		<menu className="w-72 gap-6 overflow-hidden bg-gray-950 h-full relative flex flex-col py-10 px-3 items-center top-0 left-0 rounded-r-2xl ">
 			<div className="text-white w-full flex flex-col items-center gap-3 ">
 				<Image className="w-40" src={CityRoll} alt="City Roll Logo" />
 				<h2 className="text-2xl font-bold">Admin Panel</h2>
-				<input
+				{/* <input
 					type="text"
 					className="w-full p-2 rounded-md bg-slate-800 "
 					placeholder="Buscar..."
-				/>
+				/> */}
 			</div>
-			<div className="w-full text-white text-lg font-bold [&>ul>li>a>div]:rounded-md">
-				<ul className="flex flex-col gap-3 [&>li>a>div:hover]:bg-white [&>li>a>div:hover]:text-slate-800 [&>li>a>div]:transition [&>li>a>div]:p-2 [&>li>a>div]:flex [&>li>a>div]:items-center [&>li>a>div]:gap-2">
+			<nav className="w-full text-white text-lg  [&>ul>li>a>div]:rounded-md">
+				<ul className="flex flex-col gap-3 [&>li>a>div:hover]:bg-slate-800 [&>li>a>div]:transition [&>li>a>div]:p-1.5 [&>li>a>div]:flex [&>li>a>div]:items-center [&>li>a>div]:gap-2">
 					<li>
 						<Link href="/dashboard">
-							<div className={`${pathname == "/dashboard" && "bg-white text-slate-800"}`}>
+							<div className={`${pathname == "/dashboard" && selectedProps}`}>
 								<MdHome />
 								<span>Inicio</span>
 							</div>
@@ -33,7 +35,7 @@ export default function Sidebar() {
 					</li>
 					<li>
 						<Link href="/dashboard/clients">
-							<div className={`${pathname == "/dashboard/clients" && "bg-white text-slate-800"}`}>
+							<div className={`${pathname == "/dashboard/clients" && selectedProps}`}>
 								<HiUser />
 								<span>Clientes</span>
 							</div>
@@ -41,7 +43,7 @@ export default function Sidebar() {
 					</li>
 					<li>
 						<Link href="/dashboard/companies">
-							<div className={`${pathname == "/dashboard/companies" && "bg-white text-slate-800"}`}>
+							<div className={`${pathname == "/dashboard/companies" && selectedProps}`}>
 								<MdBusiness />
 								<span>Empresas</span>
 							</div>
@@ -49,7 +51,7 @@ export default function Sidebar() {
 					</li>
 					<li>
 						<Link href="/dashboard/places">
-							<div className={`${pathname == "/dashboard/places" && "bg-white text-slate-800"}`}>
+							<div className={`${pathname == "/dashboard/places" && selectedProps}`}>
 								<MdStore />
 								<span>Estabelecimentos</span>
 							</div>
@@ -57,7 +59,7 @@ export default function Sidebar() {
 					</li>
 					<li>
 						<Link href="/dashboard/tables">
-							<div className={`${pathname == "/dashboard/tables" && "bg-white text-slate-800"}`}>
+							<div className={`${pathname == "/dashboard/tables" && selectedProps}`}>
 								<MdTableBar />
 								<span>Mesas</span>
 							</div>
@@ -80,7 +82,7 @@ export default function Sidebar() {
 						</Link>
 					</li>
 				</ul>
-			</div>
+			</nav>
 		</menu>
 	);
 }

@@ -21,13 +21,15 @@ export default function Home() {
 	return (
 		<main>
 			<section className="bg-black text-white h-screen flex flex-col justify-center items-center">
-				<div className="flex items-center flex-col gap-6">
+				<div className="flex items-center flex-col gap-6 bg-slate-900 rounded-3xl p-10">
 					<Image className="w-60" src={CityRoll} alt="" />
 					<h1 className="font-bold self-start text-2xl">Seja bem vindo(a)!</h1>
 					<div className="flex flex-col gap-3 w-96">
 						<div className="flex flex-col">
 							<label htmlFor="">E-mail</label>
 							<input
+								value={email}
+								onChange={(e) => setEmail(e.target.value)}
 								className="bg-gray-800 text-white rounded-md p-2"
 								type="email"
 								placeholder="Digite seu e-mail"
@@ -36,6 +38,8 @@ export default function Home() {
 						<div className="flex flex-col">
 							<label htmlFor="">Senha</label>
 							<input
+								value={password}
+								onChange={(e) => setPassword(e.target.value)}
 								className="bg-gray-800 text-white rounded-md p-2"
 								type="password"
 								placeholder="Digite sua senha"

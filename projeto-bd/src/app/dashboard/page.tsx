@@ -1,11 +1,11 @@
 import React from "react";
 import Sidebar from "../components/sidebar";
-import HomePage from "./components/Home";
+import HomePage from "./home/Home";
 
 export default function SignIn() {
 	return (
 		<main>
-			<section className="bg-slate-900 flex h-screen">
+			<section className="from-slate-800 to-slate-950 bg-gradient-to-tr flex h-screen">
 				<Sidebar />
 				<HomePage />
 			</section>
