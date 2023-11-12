@@ -2,10 +2,10 @@
 import React, { useState } from "react";
 import Modal from "react-modal";
 import { defaultModalStyle } from "@/app/components/modalstyle";
-import AddPlaceModal from "./modals/addPlaceModal";
-import CompanyTable from "./PlacesTable";
+import AddCompanyModal from "./modals/addCompanyModal";
+import CompanyTable from "./companyTable";
 
-export default function PlacesContent() {
+export default function CompaniesContent() {
 	const [addModalIsOpen, setAddModalIsOpen] = useState(false);
 
 	const handleModalOpen = () => {
@@ -19,9 +19,9 @@ export default function PlacesContent() {
 	return (
 		<div className="text-white w-full flex flex-col gap-5 p-12">
 			<div>
-				<h1 className="text-2xl font-bold">Estabelecimentos</h1>
+				<h1 className="text-2xl font-bold">Empresas</h1>
 				<Modal style={defaultModalStyle} isOpen={addModalIsOpen}>
-					<AddPlaceModal onRequestClose={handleCloseModal} />
+					<AddCompanyModal onRequestClose={handleCloseModal} />
 				</Modal>
 
 				<div className="flex flex-row justify-between">

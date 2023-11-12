@@ -21,7 +21,7 @@ export default function Home() {
 	return (
 		<main>
 			<section className="bg-black text-white h-screen flex flex-col justify-center items-center">
-				<div className="flex items-center flex-col gap-6 bg-slate-900 rounded-3xl p-10">
+				<div className="flex items-center flex-col gap-6 to-slate-900 from-slate-950 bg-gradient-to-t rounded-3xl p-10">
 					<Image className="w-60" src={CityRoll} alt="" />
 					<h1 className="font-bold self-start text-2xl">Seja bem vindo(a)!</h1>
 					<div className="flex flex-col gap-3 w-96">
@@ -52,8 +52,8 @@ export default function Home() {
 					>
 						Entrar
 					</button>
-					<a className="text-orange-700 font-bold" href="">
-						Novo Aqui? Crie sua conta.
+					<a className="text-orange-700" href="">
+						Novo Aqui? <strong>Crie sua conta.</strong>
 					</a>
 				</div>
 			</section>

@@ -2,43 +2,28 @@
 import React, { useState } from "react";
 import ClientsTable from "./clientsTable";
 import Modal from "react-modal";
-import AddClientsModalContent from "./addClientsModal";
-
-const customStyles = {
-	content: {
-		top: "50%",
-		left: "50%",
-		right: "auto",
-		bottom: "auto",
-		marginRight: "-50%",
-		transform: "translate(-50%, -50%)",
-		backgroundColor: "#334155",
-		border: "none",
-		borderRadius: "1rem",
-	},
-	overlay: {
-		backgroundColor: "#000000bc",
-	},
-};
+import AddClientsModalContent from "./modals/addClientsModal";
+import { defaultModalStyle } from "@/app/components/modalstyle";
 
 export default function ClientsContent() {
-	const [modalIsOpen, setModalIsOpen] = useState(false);
+	const [addModalIsOpen, setAddModalIsOpen] = useState(false);
 
 	const handleModalOpen = () => {
-		setModalIsOpen(true);
+		setAddModalIsOpen(true);
 	};
 
 	const handleCloseModal = () => {
-		setModalIsOpen(false);
+		setAddModalIsOpen(false);
 	};
 
 	return (
 		<div className="text-white w-full flex flex-col gap-5 p-12">
 			<div>
 				<h1 className="text-2xl font-bold">Clientes</h1>
-				<Modal style={customStyles} isOpen={modalIsOpen}>
+				<Modal style={defaultModalStyle} isOpen={addModalIsOpen}>
 					<AddClientsModalContent onRequestClose={handleCloseModal} />
 				</Modal>
+
 				<div className="flex flex-row justify-between">
 					<input
 						type="text"

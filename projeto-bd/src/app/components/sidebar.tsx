@@ -13,7 +13,7 @@ export default function Sidebar() {
 	const selectedProps = "bg-slate-800 shadow-md";
 
 	return (
-		<menu className="w-72 gap-6 overflow-hidden bg-gray-950 h-full relative flex flex-col py-10 px-3 items-center top-0 left-0 rounded-r-2xl ">
+		<menu className="w-72 gap-6 overflow-hidden bg-gray-950 h-full relative flex flex-col py-10 px-3 items-center top-0 left-0 rounded-r-2xl">
 			<div className="text-white w-full flex flex-col items-center gap-3 ">
 				<Image className="w-40" src={CityRoll} alt="City Roll Logo" />
 				<h2 className="text-2xl font-bold">Admin Panel</h2>
