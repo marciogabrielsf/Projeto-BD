@@ -1,6 +1,6 @@
 import React from "react";
 import Sidebar from "../components/sidebar";
-import HomePage from "./home/Home";
+import HomePage from "./home/page";
 
 export default function SignIn() {
 	return (

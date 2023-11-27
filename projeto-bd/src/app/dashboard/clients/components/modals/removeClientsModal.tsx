@@ -1,15 +1,22 @@
 import React, { useState } from "react";
 import { MdClose } from "react-icons/md";
-import { ClientProps } from "../clientsTable";
+import { deleteClient } from "@/app/services/clients.service";
+import { ClientProps } from "../ClientsContent";
 
 interface Props {
 	onRequestClose: () => void;
+	getClients: () => void;
 	data: ClientProps | null;
 }
 
-export default function RemoveClientsModal({ onRequestClose, data }: Props) {
-	const handleRemoveButton = (e: React.MouseEvent) => {
+export default function RemoveClientsModal({ onRequestClose, data, getClients }: Props) {
+	const handleRemoveButton = async (e: React.MouseEvent) => {
 		e.preventDefault();
+		if (data) {
+			await deleteClient(data.id);
+			await getClients();
+			onRequestClose();
+		}
 	};
 
 	return (

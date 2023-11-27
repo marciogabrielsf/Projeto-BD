@@ -1,12 +1,33 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ClientsTable from "./clientsTable";
 import Modal from "react-modal";
 import AddClientsModalContent from "./modals/addClientsModal";
 import { defaultModalStyle } from "@/app/components/modalstyle";
+import { getClients } from "@/app/services/clients.service";
+export interface ClientProps {
+	id: number;
+	name: string;
+	email: string;
+	phone: string;
+	cpf: string;
+}
 
 export default function ClientsContent() {
 	const [addModalIsOpen, setAddModalIsOpen] = useState(false);
+
+	const [clients, setClients] = useState<ClientProps[]>([]);
+
+	const getClientData = async () => {
+		const data = await getClients();
+		if (data) {
+			setClients(data.clients);
+		}
+	};
+
+	useEffect(() => {
+		getClientData();
+	}, []);
 
 	const handleModalOpen = () => {
 		setAddModalIsOpen(true);
@@ -21,7 +42,7 @@ export default function ClientsContent() {
 			<div>
 				<h1 className="text-2xl font-bold">Clientes</h1>
 				<Modal style={defaultModalStyle} isOpen={addModalIsOpen}>
-					<AddClientsModalContent onRequestClose={handleCloseModal} />
+					<AddClientsModalContent getClients={getClientData} onRequestClose={handleCloseModal} />
 				</Modal>
 
 				<div className="flex flex-row justify-between">
@@ -38,7 +59,7 @@ export default function ClientsContent() {
 					</button>
 				</div>
 			</div>
-			<ClientsTable />
+			<ClientsTable clients={clients} getClients={getClientData} />
 		</div>
 	);
 }

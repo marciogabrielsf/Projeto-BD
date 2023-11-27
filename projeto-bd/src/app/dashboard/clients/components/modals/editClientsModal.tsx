@@ -1,24 +1,30 @@
 import React, { useState } from "react";
-import ReactDOM from "react-dom";
-import Modal from "react-modal";
 import { MdClose } from "react-icons/md";
 import InputMask from "react-input-mask";
-import { ClientProps } from "../clientsTable";
+import { updateClient } from "@/app/services/clients.service";
+import { ClientProps } from "../ClientsContent";
 
 interface Props {
 	onRequestClose: () => void;
 	client: ClientProps | null;
+	getClients: () => void;
 }
 
-export default function EditClientsModal({ onRequestClose, client }: Props) {
-	const addButton = (e: React.MouseEvent) => {
-		e.preventDefault();
-	};
+export default function EditClientsModal({ onRequestClose, client, getClients }: Props) {
+	const [name, setName] = useState(client?.name || "");
+	const [email, setEmail] = useState(client?.email || "");
+	const [phone, setPhone] = useState(client?.phone || "");
+	const [cpf, setCpf] = useState(client?.cpf || "");
 
-	const [name, setName] = useState(client?.name);
-	const [email, setEmail] = useState(client?.email);
-	const [phone, setPhone] = useState(client?.phone);
-	const [cpf, setCpf] = useState(client?.cpf);
+	const addButton = async (e: React.MouseEvent) => {
+		e.preventDefault();
+
+		if (client) {
+			await updateClient(client.id, name, email, cpf, phone);
+			await getClients();
+			onRequestClose();
+		}
+	};
 
 	const onlyNumbers = (str: string) => str.replace(/[^0-9]/g, "");
 
@@ -78,7 +84,7 @@ export default function EditClientsModal({ onRequestClose, client }: Props) {
 					onClick={(e) => addButton(e)}
 					className="py-3 mt-3 px-10 hover:bg-secondary transition active:opacity-80 bg-primary rounded-xl"
 				>
-					Adicionar
+					Atualizar
 				</button>
 			</form>
 		</div>
