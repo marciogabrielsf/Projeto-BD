@@ -1,7 +1,7 @@
 from flask_restful import Resource, reqparse
 from app.config import DatabaseConnection
 
-from app.services import ClientService, CompanyService
+from app.services import ClientService, CompanyService, TableService
 
 
 class AuthView(Resource):
@@ -129,8 +129,34 @@ class CompanyView(Resource):
 
 
 class TableView(Resource):
+    def __init__(self) -> None:
+        self.database = DatabaseConnection()
+        
     def get(self):
-        pass
+        tables, code = TableService.getTable(self)
+
+        return {"tables": tables}, code
+    
+    def post(self):
+        parser = reqparse.RequestParser()
+
+        parser.add_argument("number", type=int, required=True)
+        parser.add_argument("value", type=int, required=True)
+        parser.add_argument("client_id", type=int, required=True)
+        parser.add_argument("place_id", type=int, required=True)
+
+        data = parser.parse_args()
+
+        table = {
+            "number": data["number"],
+            "value": data["value"],
+            "client_id": data["client_id"],
+            "place_id": data["place_id"],
+            
+        }
+
+        response, code = TableService.createTable(self, table)
+        return {"message": response}, code
 
 
 class PlaceView(Resource):

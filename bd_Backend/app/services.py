@@ -144,6 +144,42 @@ class CompanyService:
             return "Erro ao deletar Empresa", 400
 
 class TableService:
+    def getTable(self):
+        rows = self.database.cursor.execute("SELECT * FROM table").fetchall()
+
+        table = []
+        for row in rows:
+            d = collections.OrderedDict()
+            d["id"] = row[0]
+            d["number"] = row[1]
+            d["value"] = row[2]
+            d["client_id"] = row[3]
+            d["place_id"] = row[4]
+            table.append(d)
+        
+
+        return table, 200
+    
+    def createTable(self, table):
+        try:
+            number, value, client_id, place_id = (
+                table["number"],
+                table["value"],
+                table["client_id"],
+                table["place_id"]
+            )
+            self.database.cursor.execute(
+                "INSERT INTO table (number, value, client_id, place_id) VALUES (?, ?, ?, ?)  ",
+                (number, value, client_id, place_id),
+            )
+            self.database.connection.commit()
+            self.database.cursor.close()
+            return "Table created successfully!", 200
+        except Exception as e:
+            print(e)
+            return "Erro ao criar Table", 400
+    
+    
     pass
 
 
