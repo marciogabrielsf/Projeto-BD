@@ -10,6 +10,8 @@ api = Api(app)
 api.add_resource(AuthView, "/auth/")
 api.add_resource(ClientView, "/clients/")
 api.add_resource(CompanyView, "/company/")
+api.add_resource(TableView, "/tables/")
+api.add_resource(PlaceView, "/tables/")
 
 if __name__ == "__main__":
     database = DatabaseConnection()

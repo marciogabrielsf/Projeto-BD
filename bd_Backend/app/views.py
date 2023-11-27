@@ -1,7 +1,7 @@
 from flask_restful import Resource, reqparse
 from app.config import DatabaseConnection
 
-from app.services import ClientService
+from app.services import ClientService, CompanyService
 
 
 class AuthView(Resource):
@@ -25,7 +25,9 @@ class ClientView(Resource):
         parser.add_argument("phone", type=str, required=True)
         parser.add_argument("cpf", type=str, required=True)
         parser.add_argument("password", type=str, required=True)
+
         data = parser.parse_args()
+
         client = {
             "name": data["name"],
             "email": data["email"],
@@ -33,7 +35,7 @@ class ClientView(Resource):
             "cpf": data["cpf"],
             "password": data["password"],
         }
-        print(client)
+
         response, code = ClientService.createClient(self, client)
         return {"message": response}, code
 
@@ -67,7 +69,38 @@ class ClientView(Resource):
 
 
 class CompanyView(Resource):
+    def __init__(self) -> None:
+        self.database = DatabaseConnection()
+
     def get(self):
+        companies, code = CompanyService.getCompanies(self)
+
+        return {"companies": companies}, code
+
+    def post(self):
+        parser = reqparse.RequestParser()
+
+        parser.add_argument("name", type=str, required=True)
+        parser.add_argument("email", type=str, required=True)
+        parser.add_argument("phone", type=str, required=True)
+        parser.add_argument("cnpj", type=str, required=True)
+
+        data = parser.parse_args()
+
+        company = {
+            "name": data["name"],
+            "email": data["email"],
+            "phone": data["phone"],
+            "cnpj": data["cnpj"],
+        }
+
+        response, code = CompanyService.createCompanies(self, company)
+        return {"message": response}, code
+
+    def put(self):
+        pass
+
+    def delete(self):
         pass
 
 

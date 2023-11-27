@@ -75,7 +75,39 @@ class ClientService:
 
 
 class CompanyService:
-    pass
+    def getCompanies(self):
+        rows = self.database.cursor.execute("SELECT * FROM companies").fetchall()
+
+        companies = []
+        for row in rows:
+            d = collections.OrderedDict()
+            d["id"] = row[0]
+            d["name"] = row[1]
+            d["email"] = row[2]
+            d["phone"] = row[3]
+            d["cnpj"] = row[4]
+            companies.append(d)
+
+        return companies, 200
+
+    def createCompanies(self, company):
+        try:
+            name, email, phone, cnpj = (
+                company["name"],
+                company["email"],
+                company["phone"],
+                company["cnpj"],
+            )
+            self.database.cursor.execute(
+                "INSERT INTO companies (name, email, phone, cnpj) VALUES (?, ?, ?, ?)",
+                (name, email, phone, cnpj),
+            )
+            self.database.connection.commit()
+            self.database.cursor.close()
+            return "Company created successfully!", 200
+        except Exception as e:
+            print(e)
+            return "Erro ao criar Empresa", 400
 
 
 class TableService:
