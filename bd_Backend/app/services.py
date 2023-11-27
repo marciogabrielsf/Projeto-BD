@@ -108,7 +108,40 @@ class CompanyService:
         except Exception as e:
             print(e)
             return "Erro ao criar Empresa", 400
-
+        
+    def updateCompany(self, company):
+            try:
+                (
+                    id,
+                    name,
+                    email,
+                    phone,
+                    cnpj,
+                ) = (
+                    company["id"],
+                    company["name"],
+                    company["email"],
+                    company["phone"],
+                    company["cnpj"],
+                )
+                self.database.cursor.execute(
+                    "UPDATE companies SET name = ?, email = ?, phone = ?, cnpj = ? WHERE id = ?",
+                    (name, email, phone, cnpj, id),
+                )
+                self.database.connection.commit()
+                self.database.cursor.close()
+                return "Company updated successfully!", 200
+            except Exception as e:
+                return "Erro ao atualizar Empresa", 400
+            
+    def deleteCompany(self, id):
+        try:
+            self.database.cursor.execute("DELETE FROM companies WHERE id = ?", (id,))
+            self.database.connection.commit()
+            self.database.cursor.close()
+            return "Company deleted successfully!", 200
+        except Exception as e:
+            return "Erro ao deletar Empresa", 400
 
 class TableService:
     pass

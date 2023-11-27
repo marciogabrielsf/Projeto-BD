@@ -98,10 +98,34 @@ class CompanyView(Resource):
         return {"message": response}, code
 
     def put(self):
-        pass
+        parser = reqparse.RequestParser()
+
+        parser.add_argument("id", type=int, required=True)
+        parser.add_argument("name", type=str, required=True)
+        parser.add_argument("email", type=str, required=True)
+        parser.add_argument("phone", type=str, required=True)
+        parser.add_argument("cnpj", type=str, required=True)
+        data = parser.parse_args()
+        company = {
+            "id": data["id"],
+            "name": data["name"],
+            "email": data["email"],
+            "phone": data["phone"],
+            "cnpj": data["cnpj"],
+        }
+        response, code = CompanyService.updateCompany(self, company)
+        return {"message": response}, code
+        
 
     def delete(self):
-        pass
+        parser = reqparse.RequestParser()
+
+        parser.add_argument("id", type=int, required=True)
+        data = parser.parse_args()
+        id = data["id"]
+        response, code = CompanyService.deleteCompany(self, id)
+        return {"message": response}, code
+        
 
 
 class TableView(Resource):
