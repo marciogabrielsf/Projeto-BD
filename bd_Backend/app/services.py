@@ -143,43 +143,6 @@ class CompanyService:
         except Exception as e:
             return "Erro ao deletar Empresa", 400
 
-class TableService:
-    def getTable(self):
-        rows = self.database.cursor.execute("SELECT * FROM table").fetchall()
-
-        table = []
-        for row in rows:
-            d = collections.OrderedDict()
-            d["id"] = row[0]
-            d["number"] = row[1]
-            d["value"] = row[2]
-            d["client_id"] = row[3]
-            d["place_id"] = row[4]
-            table.append(d)
-        
-
-        return table, 200
-    
-    def createTable(self, table):
-        try:
-            number, value, client_id, place_id = (
-                table["number"],
-                table["value"],
-                table["client_id"],
-                table["place_id"]
-            )
-            self.database.cursor.execute(
-                "INSERT INTO table (number, value, client_id, place_id) VALUES (?, ?, ?, ?)  ",
-                (number, value, client_id, place_id),
-            )
-            self.database.connection.commit()
-            self.database.cursor.close()
-            return "Table created successfully!", 200
-        except Exception as e:
-            print(e)
-            return "Erro ao criar Table", 400
-    pass
-
 
 class PlaceService:
     def getPlaces(self):
@@ -261,3 +224,75 @@ class PlaceService:
             return "Place deleted successfully!", 200
         except Exception as e:
             return "Erro ao deletar Place", 400
+        
+        
+class TableService:
+    def getTable(self):
+        rows = self.database.cursor.execute("SELECT * FROM tables").fetchall()
+
+        tables = []
+        for row in rows:
+            d = collections.OrderedDict()
+            d["id"] = row[0]
+            d["number"] = row[1]
+            d["value"] = row[2]
+            d["client_id"] = row[3]
+            d["place_id"] = row[4]
+            tables.append(d)
+        
+
+        return tables, 200
+    
+    def createTable(self, tables):
+        try:
+            number, value, client_id, place_id = (
+                tables["number"],
+                tables["value"],
+                tables["client_id"],
+                tables["place_id"]
+            )
+            self.database.cursor.execute(
+                "INSERT INTO tables (number, value, client_id, place_id) VALUES (?, ?, ?, ?)  ",
+                (number, value, client_id, place_id),
+            )
+            self.database.connection.commit()
+            self.database.cursor.close()
+            return "Tables created successfully!", 200
+        except Exception as e:
+            print(e)
+            return "Erro ao criar Tables", 400
+    pass
+
+    def updateTable(self, tables):
+        try:
+            (
+                id,
+                number,
+                value,
+                client_id,
+                place_id,
+            ) = (
+                tables["id"],
+                tables["number"],
+                tables["value"],
+                tables["client_id"],
+                tables["place_id"],
+            )
+            self.database.cursor.execute(
+                "UPDATE tables SET number = ?, value = ?, client_id = ?, place_id = ? WHERE id = ?",
+                (number, value, client_id, place_id, id),
+            )
+            self.database.connection.commit()
+            self.database.cursor.close()
+            return "Table updated successfully!", 200
+        except Exception as e:
+            return "Erro ao atualizar Mesa", 400
+        
+    def deleteTable(self, id):
+        try:
+            self.database.cursor.execute("DELETE FROM tables WHERE id = ?", (id,))
+            self.database.connection.commit()
+            self.database.cursor.close()
+            return "Table deleted successfully!", 200
+        except Exception as e:
+            return "Erro ao deletar table"

@@ -128,37 +128,6 @@ class CompanyView(Resource):
         
 
 
-class TableView(Resource):
-    def __init__(self) -> None:
-        self.database = DatabaseConnection()
-        
-    def get(self):
-        tables, code = TableService.getTable(self)
-
-        return {"tables": tables}, code
-    
-    def post(self):
-        parser = reqparse.RequestParser()
-
-        parser.add_argument("number", type=int, required=True)
-        parser.add_argument("value", type=int, required=True)
-        parser.add_argument("client_id", type=int, required=True)
-        parser.add_argument("place_id", type=int, required=True)
-
-        data = parser.parse_args()
-
-        table = {
-            "number": data["number"],
-            "value": data["value"],
-            "client_id": data["client_id"],
-            "place_id": data["place_id"],
-            
-        }
-
-        response, code = TableService.createTable(self, table)
-        return {"message": response}, code
-
-
 class PlaceView(Resource):
     def __init__(self) -> None:
         self.database = DatabaseConnection()
@@ -224,4 +193,65 @@ class PlaceView(Resource):
         response, code = PlaceService.deletePlace(self, id)
         return {"message": response}, code
     
+    
+
+
+class TableView(Resource):
+    def __init__(self) -> None:
+        self.database = DatabaseConnection()
+        
+    def get(self):
+        tables, code = TableService.getTable(self)
+
+        return {"tables": tables}, code
+    
+    def post(self):
+        parser = reqparse.RequestParser()
+
+        parser.add_argument("number", type=int, required=True)
+        parser.add_argument("value", type=int, required=True)
+        parser.add_argument("client_id", type=int, required=True)
+        parser.add_argument("place_id", type=int, required=True)
+
+        data = parser.parse_args()
+
+        tables = {
+            "number": data["number"],
+            "value": data["value"],
+            "client_id": data["client_id"],
+            "place_id": data["place_id"],
+            
+        }
+
+        response, code = TableService.createTable(self, tables)
+        return {"message": response}, code
+    
+    def put(self):
+        parser = reqparse.RequestParser()
+
+        parser.add_argument("id", type=int, required=True)
+        parser.add_argument("number", type=int, required=True)
+        parser.add_argument("value", type=int, required=True)
+        parser.add_argument("client_id", type=int, required=True)
+        parser.add_argument("place_id", type=int, required=True)
+        data = parser.parse_args()
+        tables = {
+            "id": data["id"],
+            "number": data["number"],
+            "value": data["value"],
+            "client_id": data["client_id"],
+            "place_id": data["place_id"],
+        }
+        response, code = TableService.updateTable(self, tables)
+        return {"message": response}, code
+    
+    def delete(self):
+        parser = reqparse.RequestParser()
+
+        parser.add_argument("id", type=int, required=True)
+        data = parser.parse_args()
+        id = data["id"]
+        response, code = TableService.deleteTable(self, id)
+        return {"message": response}, code
+
         

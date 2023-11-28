@@ -11,7 +11,7 @@ api = Api(app)
 api.add_resource(AuthView, "/auth/")
 api.add_resource(ClientView, "/clients/")
 api.add_resource(CompanyView, "/company/")
-api.add_resource(TableView, "/tables/")
+api.add_resource(TableView, "/table/")
 api.add_resource(PlaceView, "/place/")
 
 if __name__ == "__main__":
