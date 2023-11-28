@@ -1,7 +1,7 @@
 from flask_restful import Resource, reqparse
 from app.config import DatabaseConnection
 
-from app.services import ClientService, CompanyService, TableService
+from app.services import ClientService, CompanyService, PlaceService, TableService
 
 
 class AuthView(Resource):
@@ -160,5 +160,68 @@ class TableView(Resource):
 
 
 class PlaceView(Resource):
+    def __init__(self) -> None:
+        self.database = DatabaseConnection()
+    
     def get(self):
-        pass
+        places, code = PlaceService.getPlaces(self)
+        return {"places": places}, code
+    
+    def post(self):
+        parser = reqparse.RequestParser()
+
+        parser.add_argument("name", type=str, required=True)
+        parser.add_argument("address", type=str, required=True)
+        parser.add_argument("phone", type=str, required=True)
+        parser.add_argument("avg_price", type=int, required=True)
+        parser.add_argument("stars", type=int, required=True)
+        parser.add_argument("company_id", type=int, required=True)
+        
+        data = parser.parse_args()
+
+        place = {
+            "name": data["name"],
+            "address": data["address"],
+            "phone": data["phone"],
+            "avg_price": data["avg_price"],
+            "stars": data["stars"],
+            "company_id": data["company_id"],
+        }
+
+        response, code = PlaceService.createPlace(self, place)
+        return {"message": response}, code
+    
+    def put(self):
+        parser = reqparse.RequestParser()
+
+        parser.add_argument("id", type=int, required=True)
+        parser.add_argument("name", type=str, required=True)
+        parser.add_argument("address", type=str, required=True)
+        parser.add_argument("phone", type=str, required=True)
+        parser.add_argument("avg_price", type=int, required=True)
+        parser.add_argument("stars", type=int, required=True)
+        parser.add_argument("company_id", type=int, required=True)
+        
+        data = parser.parse_args()
+        place = {
+            "id": data["id"],
+            "name": data["name"],
+            "address": data["address"],
+            "phone": data["phone"],
+            "avg_price": data["avg_price"],
+            "stars": data["stars"],
+            "company_id": data["company_id"],
+        }
+        response, code = PlaceService.updatePlace(self, place)
+        return {"message": response}, code
+    
+    def delete(self):
+        parser = reqparse.RequestParser()
+
+        parser.add_argument("id", type=int, required=True)
+        data = parser.parse_args()
+        id = data["id"]
+        response, code = PlaceService.deletePlace(self, id)
+        return {"message": response}, code
+    
+        

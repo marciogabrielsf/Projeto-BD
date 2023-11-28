@@ -178,10 +178,86 @@ class TableService:
         except Exception as e:
             print(e)
             return "Erro ao criar Table", 400
-    
-    
     pass
 
 
-class PlaceView:
+class PlaceService:
+    def getPlaces(self):
+        rows = self.database.cursor.execute("SELECT * FROM place").fetchall()
+
+        places = []
+        for row in rows:
+            d = collections.OrderedDict()
+            d["id"] = row[0]
+            d["name"] = row[1]
+            d["address"] = row[2]
+            d["phone"] = row[3]
+            d["avg_price"] = row[4]
+            d["stars"] = row[5]
+            d["company_id"] = row[6]
+            places.append(d)
+        self.database.cursor.close()
+
+        return places, 200
     pass
+
+    def createPlace(self, place):
+        try:
+            name, address, phone, avg_price, stars, company_id = (
+                place["name"],
+                place["address"],
+                place["phone"],
+                place["avg_price"],
+                place["stars"],
+                place["company_id"],
+            )
+            self.database.cursor.execute(
+                "INSERT INTO place (name, address, phone, avg_price, stars, company_id) VALUES (?, ?, ?, ?, ?, ?)  ",
+                (name, address, phone, avg_price, stars, company_id),
+            )
+            self.database.connection.commit()
+            self.database.cursor.close()
+            return "Place created successfully!", 200
+        except Exception as e:
+            print(e)
+            return "Erro ao criar Place", 400
+        
+        
+    def updatePlace(self, place):
+        try:
+            (
+                id,
+                name,
+                address,
+                phone,
+                avg_price,
+                stars,
+                company_id,
+            ) = (
+                place["id"],
+                place["name"],
+                place["address"],
+                place["phone"],
+                place["avg_price"],
+                place["stars"],
+                place["company_id"],
+            )
+            self.database.cursor.execute(
+                "UPDATE place SET name = ?, address = ?, phone = ?, avg_price = ?, stars = ?, company_id = ? WHERE id = ?",
+                (name, address, phone, avg_price, stars, company_id, id),
+            )
+            self.database.connection.commit()
+            self.database.cursor.close()
+            return "Place updated successfully!", 200
+        except Exception as e:
+            return "Erro ao atualizar Place", 400
+
+
+    def deletePlace(self, id):
+        try:
+            self.database.cursor.execute("DELETE FROM place WHERE id = ?", (id,))
+            self.database.connection.commit()
+            self.database.cursor.close()
+            return "Place deleted successfully!", 200
+        except Exception as e:
+            return "Erro ao deletar Place", 400
