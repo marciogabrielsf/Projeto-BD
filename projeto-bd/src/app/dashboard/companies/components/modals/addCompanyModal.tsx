@@ -3,16 +3,13 @@ import ReactDOM from "react-dom";
 import Modal from "react-modal";
 import { MdClose } from "react-icons/md";
 import InputMask from "react-input-mask";
+import { createCompany } from "@/app/services/companies.service";
 
 interface Props {
 	onRequestClose: () => void;
 }
 
 export default function AddCompanyModal({ onRequestClose }: Props) {
-	const addButton = (e: React.MouseEvent) => {
-		e.preventDefault();
-	};
-
 	const [name, setName] = useState("");
 	const [email, setEmail] = useState("");
 	const [phone, setPhone] = useState("");
@@ -20,6 +17,16 @@ export default function AddCompanyModal({ onRequestClose }: Props) {
 
 	const onlyNumbers = (str: string) => str.replace(/[^0-9]/g, "");
 
+	const addButton = async (e: React.MouseEvent) => {
+		e.preventDefault();
+
+		if (name && email && phone && cnpj) {
+			await createCompany(name, email, phone, cnpj);
+			onRequestClose();
+		} else {
+			alert("Preencha todos os campos!");
+		}
+	};
 	return (
 		<div className="text-white w-[30rem] p-2 flex gap-3 flex-col">
 			<div className="flex mb-2 flex-row items-center justify-between">

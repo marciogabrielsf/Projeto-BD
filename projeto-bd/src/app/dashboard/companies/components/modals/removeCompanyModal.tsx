@@ -1,15 +1,20 @@
+import { deleteCompany } from "@/app/services/companies.service";
+import { ICompany } from "@/app/types";
 import React, { useState } from "react";
 import { MdClose } from "react-icons/md";
-import { CompanyProps } from "../companyTable";
 
 interface Props {
 	onRequestClose: () => void;
-	data: CompanyProps | null;
+	data: ICompany | null;
 }
 
 export default function RemoveCompanyModal({ onRequestClose, data }: Props) {
-	const handleRemoveButton = (e: React.MouseEvent) => {
+	const handleRemoveButton = async (e: React.MouseEvent) => {
 		e.preventDefault();
+		if (data) {
+			await deleteCompany(data.id);
+			onRequestClose();
+		}
 	};
 
 	return (

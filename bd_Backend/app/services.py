@@ -108,32 +108,32 @@ class CompanyService:
         except Exception as e:
             print(e)
             return "Erro ao criar Empresa", 400
-        
+
     def updateCompany(self, company):
-            try:
-                (
-                    id,
-                    name,
-                    email,
-                    phone,
-                    cnpj,
-                ) = (
-                    company["id"],
-                    company["name"],
-                    company["email"],
-                    company["phone"],
-                    company["cnpj"],
-                )
-                self.database.cursor.execute(
-                    "UPDATE companies SET name = ?, email = ?, phone = ?, cnpj = ? WHERE id = ?",
-                    (name, email, phone, cnpj, id),
-                )
-                self.database.connection.commit()
-                self.database.cursor.close()
-                return "Company updated successfully!", 200
-            except Exception as e:
-                return "Erro ao atualizar Empresa", 400
-            
+        try:
+            (
+                id,
+                name,
+                email,
+                phone,
+                cnpj,
+            ) = (
+                company["id"],
+                company["name"],
+                company["email"],
+                company["phone"],
+                company["cnpj"],
+            )
+            self.database.cursor.execute(
+                "UPDATE companies SET name = ?, email = ?, phone = ?, cnpj = ? WHERE id = ?",
+                (name, email, phone, cnpj, id),
+            )
+            self.database.connection.commit()
+            self.database.cursor.close()
+            return "Company updated successfully!", 200
+        except Exception as e:
+            return "Erro ao atualizar Empresa", 400
+
     def deleteCompany(self, id):
         try:
             self.database.cursor.execute("DELETE FROM companies WHERE id = ?", (id,))
@@ -162,6 +162,7 @@ class PlaceService:
         self.database.cursor.close()
 
         return places, 200
+
     pass
 
     def createPlace(self, place):
@@ -184,8 +185,7 @@ class PlaceService:
         except Exception as e:
             print(e)
             return "Erro ao criar Place", 400
-        
-        
+
     def updatePlace(self, place):
         try:
             (
@@ -215,7 +215,6 @@ class PlaceService:
         except Exception as e:
             return "Erro ao atualizar Place", 400
 
-
     def deletePlace(self, id):
         try:
             self.database.cursor.execute("DELETE FROM place WHERE id = ?", (id,))
@@ -224,8 +223,8 @@ class PlaceService:
             return "Place deleted successfully!", 200
         except Exception as e:
             return "Erro ao deletar Place", 400
-        
-        
+
+
 class TableService:
     def getTable(self):
         rows = self.database.cursor.execute("SELECT * FROM tables").fetchall()
@@ -239,17 +238,16 @@ class TableService:
             d["client_id"] = row[3]
             d["place_id"] = row[4]
             tables.append(d)
-        
 
         return tables, 200
-    
+
     def createTable(self, tables):
         try:
             number, value, client_id, place_id = (
                 tables["number"],
                 tables["value"],
                 tables["client_id"],
-                tables["place_id"]
+                tables["place_id"],
             )
             self.database.cursor.execute(
                 "INSERT INTO tables (number, value, client_id, place_id) VALUES (?, ?, ?, ?)  ",
@@ -261,6 +259,7 @@ class TableService:
         except Exception as e:
             print(e)
             return "Erro ao criar Tables", 400
+
     pass
 
     def updateTable(self, tables):
@@ -287,7 +286,7 @@ class TableService:
             return "Table updated successfully!", 200
         except Exception as e:
             return "Erro ao atualizar Mesa", 400
-        
+
     def deleteTable(self, id):
         try:
             self.database.cursor.execute("DELETE FROM tables WHERE id = ?", (id,))

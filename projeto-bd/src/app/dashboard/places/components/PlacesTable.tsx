@@ -102,7 +102,7 @@ type ModalProps = {
 	place: PlaceProps | null;
 };
 
-export default function CompanyTable() {
+export default function PlacesTable() {
 	const hasContent = tabledata.length > 0;
 	const [removeModal, setRemoveModal] = useState<ModalProps>({
 		isOpen: false,

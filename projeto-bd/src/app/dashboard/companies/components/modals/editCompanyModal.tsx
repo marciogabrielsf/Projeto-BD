@@ -3,16 +3,24 @@ import ReactDOM from "react-dom";
 import Modal from "react-modal";
 import { MdClose } from "react-icons/md";
 import InputMask from "react-input-mask";
-import { CompanyProps } from "../companyTable";
+import { ICompany } from "@/app/types";
+import { updateCompany } from "@/app/services/companies.service";
 
 interface Props {
 	onRequestClose: () => void;
-	company: CompanyProps | null;
+	company: ICompany | null;
 }
 
 export default function EditCompanyModal({ onRequestClose, company }: Props) {
-	const addButton = (e: React.MouseEvent) => {
+	const updateButton = async (e: React.MouseEvent) => {
 		e.preventDefault();
+
+		if (name && email && phone && cnpj && company) {
+			await updateCompany(company?.id, name, email, phone, cnpj);
+			onRequestClose();
+		} else {
+			alert("Preencha todos os campos!");
+		}
 	};
 
 	const [name, setName] = useState(company?.name);
@@ -75,10 +83,10 @@ export default function EditCompanyModal({ onRequestClose, company }: Props) {
 					/>
 				</div>
 				<button
-					onClick={(e) => addButton(e)}
+					onClick={(e) => updateButton(e)}
 					className="py-3 mt-3 px-10 hover:bg-secondary transition active:opacity-80 bg-primary rounded-xl"
 				>
-					Adicionar
+					Atualizar
 				</button>
 			</form>
 		</div>

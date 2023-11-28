@@ -3,18 +3,15 @@ import React, { useState } from "react";
 import Modal from "react-modal";
 import { defaultModalStyle } from "@/app/components/modalstyle";
 import AddPlaceModal from "./modals/addPlaceModal";
-import CompanyTable from "./PlacesTable";
+import PlacesTable from "./PlacesTable";
 
 export default function PlacesContent() {
 	const [addModalIsOpen, setAddModalIsOpen] = useState(false);
 
-	const handleModalOpen = () => {
-		setAddModalIsOpen(true);
-	};
+	const [places, setPlaces] = useState([]);
 
-	const handleCloseModal = () => {
-		setAddModalIsOpen(false);
-	};
+	const handleModalOpen = () => setAddModalIsOpen(true);
+	const handleCloseModal = () => setAddModalIsOpen(false);
 
 	return (
 		<div className="text-white w-full flex flex-col gap-5 p-12">
@@ -38,7 +35,7 @@ export default function PlacesContent() {
 					</button>
 				</div>
 			</div>
-			<CompanyTable />
+			<PlacesTable />
 		</div>
 	);
 }

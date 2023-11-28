@@ -1,20 +1,37 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Modal from "react-modal";
 import { defaultModalStyle } from "@/app/components/modalstyle";
 import AddCompanyModal from "./modals/addCompanyModal";
 import CompanyTable from "./companyTable";
+import { getCompanies } from "@/app/services/companies.service";
+import { ICompany } from "@/app/types";
+import { filterQuery } from "@/app/utils/filterQuery";
 
 export default function CompaniesContent() {
 	const [addModalIsOpen, setAddModalIsOpen] = useState(false);
 
-	const handleModalOpen = () => {
-		setAddModalIsOpen(true);
+	const [companies, setCompanies] = useState<ICompany[]>([]);
+
+	const [query, setQuery] = useState("");
+
+	const filteredCompanies = filterQuery<ICompany>(companies, query);
+
+	const getCompanyData = async () => {
+		const response = await getCompanies();
+		if (response) {
+			setCompanies(response.companies);
+		}
 	};
 
-	const handleCloseModal = () => {
-		setAddModalIsOpen(false);
-	};
+	useEffect(() => {
+		if (!addModalIsOpen) {
+			getCompanyData();
+		}
+	}, [addModalIsOpen]);
+
+	const handleModalOpen = () => setAddModalIsOpen(true);
+	const handleCloseModal = () => setAddModalIsOpen(false);
 
 	return (
 		<div className="text-white w-full flex flex-col gap-5 p-12">
@@ -29,6 +46,7 @@ export default function CompaniesContent() {
 						type="text"
 						className=" mt-2 p-2 rounded-md bg-slate-800 "
 						placeholder="Buscar..."
+						onChange={(e) => setQuery(e.target.value)}
 					/>
 					<button
 						onClick={handleModalOpen}
@@ -38,7 +56,7 @@ export default function CompaniesContent() {
 					</button>
 				</div>
 			</div>
-			<CompanyTable />
+			<CompanyTable getCompanies={getCompanyData} companies={filteredCompanies} />
 		</div>
 	);
 }

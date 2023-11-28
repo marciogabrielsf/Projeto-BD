@@ -5,16 +5,16 @@ import RemoveClientsModal from "./modals/removeClientsModal";
 import { defaultModalStyle } from "@/app/components/modalstyle";
 import EditClientsModal from "./modals/editClientsModal";
 import { getClients } from "@/app/services/clients.service";
-import { ClientProps } from "./ClientsContent";
+import { IClient } from "@/app/types";
 
 type ModalProps = {
 	isOpen: boolean;
-	client: ClientProps | null;
+	client: IClient | null;
 };
 
 interface ClientsTableProps {
 	getClients: () => void;
-	clients: ClientProps[];
+	clients: IClient[];
 }
 
 export default function ClientsTable({ getClients, clients }: ClientsTableProps) {
@@ -29,9 +29,9 @@ export default function ClientsTable({ getClients, clients }: ClientsTableProps)
 		client: null,
 	});
 
-	const handleRemoveModalOpen = (client: ClientProps) => setRemoveModal({ isOpen: true, client });
+	const handleRemoveModalOpen = (client: IClient) => setRemoveModal({ isOpen: true, client });
 	const handleRemoveModalClose = () => setRemoveModal({ isOpen: false, client: null });
-	const handleEditModalOpen = (client: ClientProps) => setEditModal({ isOpen: true, client });
+	const handleEditModalOpen = (client: IClient) => setEditModal({ isOpen: true, client });
 	const handleEditModalClose = () => setEditModal({ isOpen: false, client: null });
 
 	return (

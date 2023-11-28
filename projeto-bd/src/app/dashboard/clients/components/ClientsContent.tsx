@@ -5,18 +5,14 @@ import Modal from "react-modal";
 import AddClientsModalContent from "./modals/addClientsModal";
 import { defaultModalStyle } from "@/app/components/modalstyle";
 import { getClients } from "@/app/services/clients.service";
-export interface ClientProps {
-	id: number;
-	name: string;
-	email: string;
-	phone: string;
-	cpf: string;
-}
+import { filterQuery } from "@/app/utils/filterQuery";
+import { IClient } from "@/app/types";
 
 export default function ClientsContent() {
 	const [addModalIsOpen, setAddModalIsOpen] = useState(false);
 
-	const [clients, setClients] = useState<ClientProps[]>([]);
+	const [clients, setClients] = useState<IClient[]>([]);
+	const [query, setQuery] = useState("");
 
 	const getClientData = async () => {
 		const data = await getClients();
@@ -29,13 +25,11 @@ export default function ClientsContent() {
 		getClientData();
 	}, []);
 
-	const handleModalOpen = () => {
-		setAddModalIsOpen(true);
-	};
+	const filteredClients = filterQuery<IClient>(clients, query);
 
-	const handleCloseModal = () => {
-		setAddModalIsOpen(false);
-	};
+	const handleModalOpen = () => setAddModalIsOpen(true);
+
+	const handleCloseModal = () => setAddModalIsOpen(false);
 
 	return (
 		<div className="text-white w-full flex flex-col gap-5 p-12">
@@ -50,6 +44,7 @@ export default function ClientsContent() {
 						type="text"
 						className=" mt-2 p-2 rounded-md bg-slate-800 "
 						placeholder="Buscar..."
+						onChange={(e) => setQuery(e.target.value)}
 					/>
 					<button
 						onClick={handleModalOpen}
@@ -59,7 +54,7 @@ export default function ClientsContent() {
 					</button>
 				</div>
 			</div>
-			<ClientsTable clients={clients} getClients={getClientData} />
+			<ClientsTable clients={filteredClients} getClients={getClientData} />
 		</div>
 	);
 }
