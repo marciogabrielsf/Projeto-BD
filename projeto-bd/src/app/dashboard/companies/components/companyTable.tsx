@@ -67,8 +67,8 @@ export default function CompanyTable({ companies, getCompanies }: TableProps) {
 									{data.name}
 								</th>
 								<td>{data.email}</td>
-								<td>{data.cnpj}</td>
 								<td>{data.phone}</td>
+								<td>{data.cnpj}</td>
 								<td>
 									<div className="flex gap-3 [&>button:hover]:text-primary [&>button]:transition">
 										<button onClick={() => handleEditModalOpen(data)}>

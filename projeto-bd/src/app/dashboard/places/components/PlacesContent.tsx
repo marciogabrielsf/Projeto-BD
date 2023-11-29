@@ -1,14 +1,29 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Modal from "react-modal";
 import { defaultModalStyle } from "@/app/components/modalstyle";
 import AddPlaceModal from "./modals/addPlaceModal";
 import PlacesTable from "./PlacesTable";
+import { IPlace } from "@/app/types";
+import { getPlaces } from "@/app/services/places.service";
 
 export default function PlacesContent() {
 	const [addModalIsOpen, setAddModalIsOpen] = useState(false);
 
-	const [places, setPlaces] = useState([]);
+	const [places, setPlaces] = useState<IPlace[]>([]);
+
+	const getPlaceData = async () => {
+		const response = await getPlaces();
+		if (response) {
+			setPlaces(response.places);
+		}
+	};
+
+	useEffect(() => {
+		if (!addModalIsOpen) {
+			getPlaceData();
+		}
+	}, [addModalIsOpen]);
 
 	const handleModalOpen = () => setAddModalIsOpen(true);
 	const handleCloseModal = () => setAddModalIsOpen(false);
@@ -35,7 +50,7 @@ export default function PlacesContent() {
 					</button>
 				</div>
 			</div>
-			<PlacesTable />
+			<PlacesTable places={places} getPlaceData={getPlaceData} />
 		</div>
 	);
 }

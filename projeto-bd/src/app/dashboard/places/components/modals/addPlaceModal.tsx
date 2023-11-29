@@ -1,4 +1,7 @@
-import React, { useState } from "react";
+import { getCompanies } from "@/app/services/companies.service";
+import { createPlace } from "@/app/services/places.service";
+import { ICompany } from "@/app/types";
+import React, { useEffect, useState } from "react";
 import { MdClose } from "react-icons/md";
 import InputMask from "react-input-mask";
 
@@ -7,14 +10,35 @@ interface Props {
 }
 
 export default function AddPlaceModal({ onRequestClose }: Props) {
-	const addButton = (e: React.MouseEvent) => {
-		e.preventDefault();
-	};
+	const [companies, setCompanies] = useState<ICompany[]>([]);
+
+	useEffect(() => {
+		const getCompanyData = async () => {
+			const response = await getCompanies();
+			if (response) {
+				setCompanies(response.companies);
+			}
+		};
+		getCompanyData();
+	}, []);
 
 	const [name, setName] = useState("");
-	const [email, setEmail] = useState("");
+	const [address, setAddress] = useState("");
+	const [avgPrice, setAvgPrice] = useState(0);
+	const [stars, setStars] = useState(0);
 	const [phone, setPhone] = useState("");
-	const [cnpj, setCnpj] = useState("");
+	const [selectedCompany, setSelectedCompany] = useState(0);
+
+	const addButton = async (e: React.MouseEvent) => {
+		e.preventDefault();
+
+		if (name && address && avgPrice && stars && selectedCompany) {
+			await createPlace(name, address, phone, avgPrice, stars, selectedCompany);
+			onRequestClose();
+		} else {
+			alert("Preencha todos os campos!");
+		}
+	};
 
 	const onlyNumbers = (str: string) => str.replace(/[^0-9]/g, "");
 
@@ -40,13 +64,13 @@ export default function AddPlaceModal({ onRequestClose }: Props) {
 				</div>
 
 				<div>
-					<label htmlFor="">E-Mail</label>
+					<label htmlFor="">Endereço</label>
 					<input
-						value={email}
-						onChange={(e) => setEmail(e.target.value)}
+						value={address}
+						onChange={(e) => setAddress(e.target.value)}
 						type="text"
 						className=" p-2 rounded-md bg-slate-800 w-full"
-						placeholder="Digite o E-mail..."
+						placeholder="Digite o Endereço..."
 					/>
 				</div>
 
@@ -55,23 +79,50 @@ export default function AddPlaceModal({ onRequestClose }: Props) {
 					<InputMask
 						mask={"(99) 99999-9999"}
 						value={phone}
-						onChange={(e) => setPhone(onlyNumbers(e.target.value))}
+						onChange={(e) => setPhone(e.target.value)}
 						type="text"
+						className=" p-2 rounded-md bg-slate-800 w-full"
+						placeholder="Digite o Endereço..."
+					/>
+				</div>
+
+				<div>
+					<label htmlFor="">Preço médio</label>
+					<input
+						value={avgPrice}
+						type="number"
+						onChange={(e) => setAvgPrice(e.target.valueAsNumber)}
 						className=" p-2 rounded-md bg-slate-800 w-full"
 						placeholder="Digite o Telefone..."
 					/>
 				</div>
 
 				<div>
-					<label htmlFor="">CNPJ</label>
-					<InputMask
-						mask={"99.999.999/9999-99"}
-						value={cnpj}
-						onChange={(e) => setCnpj(onlyNumbers(e.target.value))}
-						type="text"
+					<label htmlFor="">Estrelas</label>
+					<input
+						min={0}
+						max={5}
+						type="number"
+						value={stars}
+						onChange={(e) => setStars(e.target.valueAsNumber)}
 						className=" p-2 rounded-md bg-slate-800 w-full"
 						placeholder="Digite o CPF..."
 					/>
+				</div>
+
+				<div>
+					<label htmlFor="">Empresa matriz</label>
+					<select
+						onChange={(e) => setSelectedCompany(+e.target.value)}
+						className="p-2 rounded-md bg-slate-800 w-full"
+					>
+						<option value="0">Selecione uma opção...</option>
+						{companies.map((company) => (
+							<option key={company.id} value={company.id}>
+								{company.name}
+							</option>
+						))}
+					</select>
 				</div>
 
 				<button

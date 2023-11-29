@@ -21,12 +21,14 @@ export default function AddCompanyModal({ onRequestClose }: Props) {
 		e.preventDefault();
 
 		if (name && email && phone && cnpj) {
-			await createCompany(name, email, phone, cnpj);
+			await createCompany(name, email, cnpj, phone);
 			onRequestClose();
 		} else {
 			alert("Preencha todos os campos!");
 		}
 	};
+
+	
 	return (
 		<div className="text-white w-[30rem] p-2 flex gap-3 flex-col">
 			<div className="flex mb-2 flex-row items-center justify-between">

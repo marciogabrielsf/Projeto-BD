@@ -16,7 +16,7 @@ export default function EditCompanyModal({ onRequestClose, company }: Props) {
 		e.preventDefault();
 
 		if (name && email && phone && cnpj && company) {
-			await updateCompany(company?.id, name, email, phone, cnpj);
+			await updateCompany(company?.id, name, email, cnpj, phone);
 			onRequestClose();
 		} else {
 			alert("Preencha todos os campos!");

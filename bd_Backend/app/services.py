@@ -146,7 +146,7 @@ class CompanyService:
 
 class PlaceService:
     def getPlaces(self):
-        rows = self.database.cursor.execute("SELECT * FROM place").fetchall()
+        rows = self.database.cursor.execute("SELECT * FROM places").fetchall()
 
         places = []
         for row in rows:
@@ -176,7 +176,7 @@ class PlaceService:
                 place["company_id"],
             )
             self.database.cursor.execute(
-                "INSERT INTO place (name, address, phone, avg_price, stars, company_id) VALUES (?, ?, ?, ?, ?, ?)  ",
+                "INSERT INTO places (name, address, phone, avg_price, stars, company_id) VALUES (?, ?, ?, ?, ?, ?)  ",
                 (name, address, phone, avg_price, stars, company_id),
             )
             self.database.connection.commit()
@@ -206,7 +206,7 @@ class PlaceService:
                 place["company_id"],
             )
             self.database.cursor.execute(
-                "UPDATE place SET name = ?, address = ?, phone = ?, avg_price = ?, stars = ?, company_id = ? WHERE id = ?",
+                "UPDATE places SET name = ?, address = ?, phone = ?, avg_price = ?, stars = ?, company_id = ? WHERE id = ?",
                 (name, address, phone, avg_price, stars, company_id, id),
             )
             self.database.connection.commit()
@@ -217,7 +217,7 @@ class PlaceService:
 
     def deletePlace(self, id):
         try:
-            self.database.cursor.execute("DELETE FROM place WHERE id = ?", (id,))
+            self.database.cursor.execute("DELETE FROM places WHERE id = ?", (id,))
             self.database.connection.commit()
             self.database.cursor.close()
             return "Place deleted successfully!", 200

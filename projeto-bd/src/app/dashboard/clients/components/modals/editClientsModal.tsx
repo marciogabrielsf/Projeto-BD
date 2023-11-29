@@ -2,11 +2,11 @@ import React, { useState } from "react";
 import { MdClose } from "react-icons/md";
 import InputMask from "react-input-mask";
 import { updateClient } from "@/app/services/clients.service";
-import { ClientProps } from "../ClientsContent";
+import { IClient } from "@/app/types";
 
 interface Props {
 	onRequestClose: () => void;
-	client: ClientProps | null;
+	client: IClient | null;
 	getClients: () => void;
 }
 

@@ -1,15 +1,21 @@
+import { deletePlace } from "@/app/services/places.service";
+import { IPlace } from "@/app/types";
 import React, { useState } from "react";
 import { MdClose } from "react-icons/md";
-import { PlaceProps } from "../PlacesTable";
 
 interface Props {
 	onRequestClose: () => void;
-	data: PlaceProps | null;
+	data: IPlace | null;
 }
 
 export default function RemovePlaceModal({ onRequestClose, data }: Props) {
-	const handleRemoveButton = (e: React.MouseEvent) => {
+	const handleRemoveButton = async (e: React.MouseEvent) => {
 		e.preventDefault();
+		if (data) {
+			await deletePlace(data.id);
+		}
+
+		onRequestClose();
 	};
 
 	return (
