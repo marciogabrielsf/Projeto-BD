@@ -4,8 +4,8 @@ import Modal from "react-modal";
 import RemoveClientsModal from "./modals/removeClientsModal";
 import { defaultModalStyle } from "@/app/components/modalstyle";
 import EditClientsModal from "./modals/editClientsModal";
-import { getClients } from "@/app/services/clients.service";
 import { IClient } from "@/app/types";
+import { useClients } from "@/app/hooks/clients/queries";
 
 type ModalProps = {
 	isOpen: boolean;
@@ -13,12 +13,13 @@ type ModalProps = {
 };
 
 interface ClientsTableProps {
-	getClients: () => void;
 	clients: IClient[];
 }
 
-export default function ClientsTable({ getClients, clients }: ClientsTableProps) {
-	const hasContent = clients.length > 0;
+export default function ClientsTable({ clients }: ClientsTableProps) {
+	const { isLoading, isSuccess } = useClients();
+
+	const hasContent = clients?.length > 0;
 	const [removeModal, setRemoveModal] = useState<ModalProps>({
 		isOpen: false,
 		client: null,
@@ -37,21 +38,13 @@ export default function ClientsTable({ getClients, clients }: ClientsTableProps)
 	return (
 		<div className="bg-slate-800 h-full shadow-xl shadow-[rgba(0,0,0,0.4)] p-5 rounded-xl overflow-y-auto scrollbar">
 			<Modal style={defaultModalStyle} isOpen={removeModal.isOpen}>
-				<RemoveClientsModal
-					getClients={getClients}
-					onRequestClose={handleRemoveModalClose}
-					data={removeModal.client}
-				/>
+				<RemoveClientsModal onRequestClose={handleRemoveModalClose} data={removeModal.client} />
 			</Modal>
 			<Modal style={defaultModalStyle} isOpen={editModal.isOpen}>
-				<EditClientsModal
-					getClients={getClients}
-					onRequestClose={handleEditModalClose}
-					client={editModal.client}
-				/>
+				<EditClientsModal onRequestClose={handleEditModalClose} client={editModal.client} />
 			</Modal>
 
-			{hasContent ? (
+			{!isLoading && isSuccess ? (
 				<table className="w-full text-left text-sm table-fixed">
 					<thead className="border-b-2 uppercase border-gray-800 text-gray-400">
 						<tr>
@@ -63,10 +56,10 @@ export default function ClientsTable({ getClients, clients }: ClientsTableProps)
 						</tr>
 					</thead>
 					<tbody>
-						{clients.map((data) => (
+						{clients.map((data, index) => (
 							<tr
 								className="border-b-2 border-gray-700 [&>td]:py-3 [&>td]:overflow-clip "
-								key={data.id}
+								key={index}
 							>
 								<th scope="row" className="">
 									{data.name}
@@ -90,7 +83,12 @@ export default function ClientsTable({ getClients, clients }: ClientsTableProps)
 				</table>
 			) : (
 				<div className="flex h-full justify-center items-center">
-					<p className="">Não há Clientes Adicionados</p>
+					<p className="">Carregando...</p>
+				</div>
+			)}
+			{!isLoading && isSuccess && !hasContent && (
+				<div className="flex h-full justify-center items-center">
+					<p className="">Nenhum cliente encontrado</p>
 				</div>
 			)}
 		</div>

@@ -4,31 +4,19 @@ import ClientsTable from "./clientsTable";
 import Modal from "react-modal";
 import AddClientsModalContent from "./modals/addClientsModal";
 import { defaultModalStyle } from "@/app/components/modalstyle";
-import { getClients } from "@/app/services/clients.service";
-import { filterQuery } from "@/app/utils/filterQuery";
+
+import { useClients } from "@/app/hooks/clients/queries";
 import { IClient } from "@/app/types";
+import { filterQuery } from "@/app/utils/filterQuery";
 
 export default function ClientsContent() {
 	const [addModalIsOpen, setAddModalIsOpen] = useState(false);
 
-	const [clients, setClients] = useState<IClient[]>([]);
+	const { data } = useClients();
 	const [query, setQuery] = useState("");
-
-	const getClientData = async () => {
-		const data = await getClients();
-		if (data) {
-			setClients(data.clients);
-		}
-	};
-
-	useEffect(() => {
-		getClientData();
-	}, []);
-
-	const filteredClients = filterQuery<IClient>(clients, query);
+	const filteredClients = filterQuery<IClient>(data || [], query);
 
 	const handleModalOpen = () => setAddModalIsOpen(true);
-
 	const handleCloseModal = () => setAddModalIsOpen(false);
 
 	return (
@@ -36,7 +24,7 @@ export default function ClientsContent() {
 			<div>
 				<h1 className="text-2xl font-bold">Clientes</h1>
 				<Modal style={defaultModalStyle} isOpen={addModalIsOpen}>
-					<AddClientsModalContent getClients={getClientData} onRequestClose={handleCloseModal} />
+					<AddClientsModalContent onRequestClose={handleCloseModal} />
 				</Modal>
 
 				<div className="flex flex-row justify-between">
@@ -54,7 +42,7 @@ export default function ClientsContent() {
 					</button>
 				</div>
 			</div>
-			<ClientsTable clients={filteredClients} getClients={getClientData} />
+			<ClientsTable clients={filteredClients} />
 		</div>
 	);
 }

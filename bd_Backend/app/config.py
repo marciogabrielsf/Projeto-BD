@@ -46,10 +46,20 @@ class DatabaseConnection:
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 number INTEGER NOT NULL,
                 value INTEGER NOT NULL,
-                client_id INTEGER,
                 place_id INTEGER NOT NULL,
-                FOREIGN KEY (client_id) REFERENCES client (id),
                 FOREIGN KEY (place_id) REFERENCES places (id)
+            )
+            """
+        )
+
+        self.cursor.execute(
+            """CREATE TABLE IF NOT EXISTS reservations (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            client_id INTEGER NOT NULL,
+            table_id INTEGER NOT NULL,
+            date TEXT NOT NULL,
+            FOREIGN KEY (client_id) REFERENCES client (id),
+            FOREIGN KEY (table_id) REFERENCES tables (id)
             )
             """
         )

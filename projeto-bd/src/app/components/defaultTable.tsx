@@ -1,8 +1,8 @@
 import React from "react";
-import { ClientProps } from "../dashboard/clients/components/ClientsContent";
+import { IClient } from "../types";
 
 interface TableData {
-	clients: ClientProps[];
+	clients: IClient[];
 }
 
 export default function DefaultTable({ clients }: TableData) {
@@ -18,8 +18,8 @@ export default function DefaultTable({ clients }: TableData) {
 					</tr>
 				</thead>
 				<tbody>
-					{clients.map((data) => (
-						<tr className="border-b-2 border-gray-700 [&>td]:py-3 " key={data.id}>
+					{clients.map((data, index) => (
+						<tr className="border-b-2 border-gray-700 [&>td]:py-3 " key={index}>
 							<th scope="row" className="">
 								{data.name}
 							</th>

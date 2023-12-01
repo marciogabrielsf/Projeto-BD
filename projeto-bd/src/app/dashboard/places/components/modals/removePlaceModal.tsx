@@ -1,3 +1,4 @@
+import { usePlaces } from "@/app/hooks/places/queries";
 import { deletePlace } from "@/app/services/places.service";
 import { IPlace } from "@/app/types";
 import React, { useState } from "react";
@@ -9,10 +10,13 @@ interface Props {
 }
 
 export default function RemovePlaceModal({ onRequestClose, data }: Props) {
+	const { refetch } = usePlaces();
+
 	const handleRemoveButton = async (e: React.MouseEvent) => {
 		e.preventDefault();
 		if (data) {
 			await deletePlace(data.id);
+			refetch();
 		}
 
 		onRequestClose();

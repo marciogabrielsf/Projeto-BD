@@ -8,7 +8,6 @@ import { IPlace } from "@/app/types";
 
 export interface TableProps {
 	places: IPlace[];
-	getPlaceData: () => void;
 }
 
 type ModalProps = {
@@ -16,7 +15,7 @@ type ModalProps = {
 	place: IPlace | null;
 };
 
-export default function PlacesTable({ places, getPlaceData }: TableProps) {
+export default function PlacesTable({ places }: TableProps) {
 	const hasContent = places.length > 0;
 	const [removeModal, setRemoveModal] = useState<ModalProps>({
 		isOpen: false,
@@ -27,10 +26,6 @@ export default function PlacesTable({ places, getPlaceData }: TableProps) {
 		isOpen: false,
 		place: null,
 	});
-
-	useEffect(() => {
-		getPlaceData();
-	}, [removeModal, editModal]);
 
 	const handleRemoveModalOpen = (place: IPlace) => setRemoveModal({ isOpen: true, place });
 	const handleRemoveModalClose = () => setRemoveModal({ isOpen: false, place: null });
@@ -59,10 +54,10 @@ export default function PlacesTable({ places, getPlaceData }: TableProps) {
 						</tr>
 					</thead>
 					<tbody>
-						{places.map((data) => (
+						{places.map((data, index) => (
 							<tr
 								className="border-b-2 border-gray-700 [&>td]:py-3 [&>td]:overflow-clip "
-								key={data.id}
+								key={index}
 							>
 								<th scope="row" className="">
 									{data.name}
@@ -71,8 +66,8 @@ export default function PlacesTable({ places, getPlaceData }: TableProps) {
 								<td>{data.phone}</td>
 								<td>
 									<div className="flex text-primary">
-										{[...Array(data.stars)].map(() => (
-											<BiSolidStar size={18} />
+										{[...Array(data.stars)].map((_, index) => (
+											<BiSolidStar key={index} size={18} />
 										))}
 									</div>
 								</td>

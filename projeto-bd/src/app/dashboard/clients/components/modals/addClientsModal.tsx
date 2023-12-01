@@ -1,3 +1,4 @@
+import { useClients } from "@/app/hooks/clients/queries";
 import { createClient } from "@/app/services/clients.service";
 import React, { useState } from "react";
 import { MdClose } from "react-icons/md";
@@ -5,21 +6,22 @@ import InputMask from "react-input-mask";
 
 interface Props {
 	onRequestClose: () => void;
-	getClients: () => void;
 }
 
-export default function AddClientsModalContent({ onRequestClose, getClients }: Props) {
+export default function AddClientsModalContent({ onRequestClose }: Props) {
 	const [name, setName] = useState("");
 	const [email, setEmail] = useState("");
 	const [phone, setPhone] = useState("");
 	const [cpf, setCpf] = useState("");
+
+	const { refetch } = useClients();
 
 	const addButton = async (e: React.MouseEvent) => {
 		e.preventDefault();
 
 		if (name && email && phone && cpf) {
 			await createClient(name, email, cpf, phone, "111111");
-			await getClients();
+			refetch();
 			onRequestClose();
 		}
 	};

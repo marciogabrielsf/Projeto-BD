@@ -3,7 +3,9 @@ import React from "react";
 import CityRoll from "@/assets/cityroll.png";
 import Image from "next/image";
 import { HiUser } from "react-icons/hi2";
-import { MdHome, MdBusiness, MdTableBar, MdStore, MdSettings, MdDoorFront } from "react-icons/md";
+import { MdHome, MdBusiness, MdTableBar, MdStore, MdDoorFront } from "react-icons/md";
+import { IoTicket } from "react-icons/io5";
+
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -17,11 +19,6 @@ export default function Sidebar() {
 			<div className="text-white w-full flex flex-col items-center gap-3 ">
 				<Image className="w-40" src={CityRoll} alt="City Roll Logo" />
 				<h2 className="text-2xl font-bold">Admin Panel</h2>
-				{/* <input
-					type="text"
-					className="w-full p-2 rounded-md bg-slate-800 "
-					placeholder="Buscar..."
-				/> */}
 			</div>
 			<nav className="w-full text-white text-lg  [&>ul>li>a>div]:rounded-md">
 				<ul className="flex flex-col gap-3 [&>li>a>div:hover]:bg-slate-800 [&>li>a>div]:transition [&>li>a>div]:p-1.5 [&>li>a>div]:flex [&>li>a>div]:items-center [&>li>a>div]:gap-2">
@@ -66,10 +63,10 @@ export default function Sidebar() {
 						</Link>
 					</li>
 					<li>
-						<a href="">
-							<div>
-								<MdSettings />
-								<span>Configurações</span>
+						<a href="/dashboard/reserves">
+							<div className={`${pathname == "/dashboard/reserves" && selectedProps}`}>
+								<IoTicket />
+								<span>Reservas</span>
 							</div>
 						</a>
 					</li>

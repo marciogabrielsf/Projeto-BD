@@ -3,14 +3,16 @@ import { MdClose } from "react-icons/md";
 import InputMask from "react-input-mask";
 import { updateClient } from "@/app/services/clients.service";
 import { IClient } from "@/app/types";
+import { useClients } from "@/app/hooks/clients/queries";
 
 interface Props {
 	onRequestClose: () => void;
 	client: IClient | null;
-	getClients: () => void;
 }
 
-export default function EditClientsModal({ onRequestClose, client, getClients }: Props) {
+export default function EditClientsModal({ onRequestClose, client }: Props) {
+	const { refetch } = useClients();
+
 	const [name, setName] = useState(client?.name || "");
 	const [email, setEmail] = useState(client?.email || "");
 	const [phone, setPhone] = useState(client?.phone || "");
@@ -21,7 +23,7 @@ export default function EditClientsModal({ onRequestClose, client, getClients }:
 
 		if (client) {
 			await updateClient(client.id, name, email, cpf, phone);
-			await getClients();
+			refetch();
 			onRequestClose();
 		}
 	};

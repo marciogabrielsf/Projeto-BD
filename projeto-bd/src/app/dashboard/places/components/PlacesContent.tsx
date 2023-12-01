@@ -6,24 +6,16 @@ import AddPlaceModal from "./modals/addPlaceModal";
 import PlacesTable from "./PlacesTable";
 import { IPlace } from "@/app/types";
 import { getPlaces } from "@/app/services/places.service";
+import { filterQuery } from "@/app/utils/filterQuery";
+import { usePlaces } from "@/app/hooks/places/queries";
 
 export default function PlacesContent() {
 	const [addModalIsOpen, setAddModalIsOpen] = useState(false);
+	const [query, setQuery] = useState("");
 
-	const [places, setPlaces] = useState<IPlace[]>([]);
+	const { data } = usePlaces();
 
-	const getPlaceData = async () => {
-		const response = await getPlaces();
-		if (response) {
-			setPlaces(response.places);
-		}
-	};
-
-	useEffect(() => {
-		if (!addModalIsOpen) {
-			getPlaceData();
-		}
-	}, [addModalIsOpen]);
+	const filteredPlaces = filterQuery<IPlace>(data || [], query);
 
 	const handleModalOpen = () => setAddModalIsOpen(true);
 	const handleCloseModal = () => setAddModalIsOpen(false);
@@ -41,6 +33,8 @@ export default function PlacesContent() {
 						type="text"
 						className=" mt-2 p-2 rounded-md bg-slate-800 "
 						placeholder="Buscar..."
+						value={query}
+						onChange={(e) => setQuery(e.target.value)}
 					/>
 					<button
 						onClick={handleModalOpen}
@@ -50,7 +44,7 @@ export default function PlacesContent() {
 					</button>
 				</div>
 			</div>
-			<PlacesTable places={places} getPlaceData={getPlaceData} />
+			<PlacesTable places={filteredPlaces} />
 		</div>
 	);
 }

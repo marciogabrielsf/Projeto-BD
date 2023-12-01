@@ -1,7 +1,13 @@
 from flask_restful import Resource, reqparse
 from app.config import DatabaseConnection
 
-from app.services import ClientService, CompanyService, PlaceService, TableService
+from app.services import (
+    ClientService,
+    CompanyService,
+    PlaceService,
+    ReservationService,
+    TableService,
+)
 
 
 class AuthView(Resource):
@@ -115,7 +121,6 @@ class CompanyView(Resource):
         }
         response, code = CompanyService.updateCompany(self, company)
         return {"message": response}, code
-        
 
     def delete(self):
         parser = reqparse.RequestParser()
@@ -125,17 +130,16 @@ class CompanyView(Resource):
         id = data["id"]
         response, code = CompanyService.deleteCompany(self, id)
         return {"message": response}, code
-        
 
 
 class PlaceView(Resource):
     def __init__(self) -> None:
         self.database = DatabaseConnection()
-    
+
     def get(self):
         places, code = PlaceService.getPlaces(self)
         return {"places": places}, code
-    
+
     def post(self):
         parser = reqparse.RequestParser()
 
@@ -145,7 +149,7 @@ class PlaceView(Resource):
         parser.add_argument("avg_price", type=int, required=True)
         parser.add_argument("stars", type=int, required=True)
         parser.add_argument("company_id", type=int, required=True)
-        
+
         data = parser.parse_args()
 
         place = {
@@ -159,7 +163,7 @@ class PlaceView(Resource):
 
         response, code = PlaceService.createPlace(self, place)
         return {"message": response}, code
-    
+
     def put(self):
         parser = reqparse.RequestParser()
 
@@ -170,7 +174,7 @@ class PlaceView(Resource):
         parser.add_argument("avg_price", type=int, required=True)
         parser.add_argument("stars", type=int, required=True)
         parser.add_argument("company_id", type=int, required=True)
-        
+
         data = parser.parse_args()
         place = {
             "id": data["id"],
@@ -183,7 +187,7 @@ class PlaceView(Resource):
         }
         response, code = PlaceService.updatePlace(self, place)
         return {"message": response}, code
-    
+
     def delete(self):
         parser = reqparse.RequestParser()
 
@@ -192,25 +196,22 @@ class PlaceView(Resource):
         id = data["id"]
         response, code = PlaceService.deletePlace(self, id)
         return {"message": response}, code
-    
-    
 
 
 class TableView(Resource):
     def __init__(self) -> None:
         self.database = DatabaseConnection()
-        
+
     def get(self):
         tables, code = TableService.getTable(self)
 
         return {"tables": tables}, code
-    
+
     def post(self):
         parser = reqparse.RequestParser()
 
         parser.add_argument("number", type=int, required=True)
         parser.add_argument("value", type=int, required=True)
-        parser.add_argument("client_id", type=int, required=True)
         parser.add_argument("place_id", type=int, required=True)
 
         data = parser.parse_args()
@@ -218,33 +219,29 @@ class TableView(Resource):
         tables = {
             "number": data["number"],
             "value": data["value"],
-            "client_id": data["client_id"],
             "place_id": data["place_id"],
-            
         }
 
         response, code = TableService.createTable(self, tables)
         return {"message": response}, code
-    
+
     def put(self):
         parser = reqparse.RequestParser()
 
         parser.add_argument("id", type=int, required=True)
         parser.add_argument("number", type=int, required=True)
         parser.add_argument("value", type=int, required=True)
-        parser.add_argument("client_id", type=int, required=True)
         parser.add_argument("place_id", type=int, required=True)
         data = parser.parse_args()
         tables = {
             "id": data["id"],
             "number": data["number"],
             "value": data["value"],
-            "client_id": data["client_id"],
             "place_id": data["place_id"],
         }
         response, code = TableService.updateTable(self, tables)
         return {"message": response}, code
-    
+
     def delete(self):
         parser = reqparse.RequestParser()
 
@@ -254,4 +251,54 @@ class TableView(Resource):
         response, code = TableService.deleteTable(self, id)
         return {"message": response}, code
 
-        
+
+class ReservationView(Resource):
+    def __init__(self) -> None:
+        self.database = DatabaseConnection()
+
+    def get(self):
+        reservations, code = ReservationService.getReservation(self)
+        return {"reservations": reservations}, code
+
+    def post(self):
+        parser = reqparse.RequestParser()
+
+        parser.add_argument("client_id", type=int, required=True)
+        parser.add_argument("table_id", type=int, required=True)
+        parser.add_argument("date", type=str, required=True)
+
+        data = parser.parse_args()
+
+        reservation = {
+            "client_id": data["client_id"],
+            "table_id": data["table_id"],
+            "date": data["date"],
+        }
+
+        response, code = ReservationService.createReservation(self, reservation)
+        return {"message": response}, code
+
+    def put(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument("id", type=int, required=True)
+        parser.add_argument("client_id", type=int, required=True)
+        parser.add_argument("table_id", type=int, required=True)
+        parser.add_argument("date", type=str, required=True)
+        data = parser.parse_args()
+        reservation = {
+            "id": data["id"],
+            "client_id": data["client_id"],
+            "table_id": data["table_id"],
+            "date": data["date"],
+        }
+        response, code = ReservationService.updateReservation(self, reservation)
+        return {"message": response}, code
+
+    def delete(self):
+        parser = reqparse.RequestParser()
+
+        parser.add_argument("id", type=int, required=True)
+        data = parser.parse_args()
+        id = data["id"]
+        response, code = ReservationService.deleteReservation(self, id)
+        return {"message": response}, code

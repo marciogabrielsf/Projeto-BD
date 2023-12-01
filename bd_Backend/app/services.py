@@ -227,31 +227,34 @@ class PlaceService:
 
 class TableService:
     def getTable(self):
-        rows = self.database.cursor.execute("SELECT * FROM tables").fetchall()
+        rows = self.database.cursor.execute(
+            """SELECT tables.*, places.name FROM tables
+            JOIN places ON tables.place_id = places.id"""
+        ).fetchall()
 
         tables = []
+
         for row in rows:
             d = collections.OrderedDict()
             d["id"] = row[0]
             d["number"] = row[1]
             d["value"] = row[2]
-            d["client_id"] = row[3]
-            d["place_id"] = row[4]
+            d["place_id"] = row[3]
+            d["place_name"] = row[4]
             tables.append(d)
 
         return tables, 200
 
     def createTable(self, tables):
         try:
-            number, value, client_id, place_id = (
+            number, value, place_id = (
                 tables["number"],
                 tables["value"],
-                tables["client_id"],
                 tables["place_id"],
             )
             self.database.cursor.execute(
-                "INSERT INTO tables (number, value, client_id, place_id) VALUES (?, ?, ?, ?)  ",
-                (number, value, client_id, place_id),
+                "INSERT INTO tables (number, value, place_id) VALUES (?, ?, ?)  ",
+                (number, value, place_id),
             )
             self.database.connection.commit()
             self.database.cursor.close()
@@ -268,18 +271,16 @@ class TableService:
                 id,
                 number,
                 value,
-                client_id,
                 place_id,
             ) = (
                 tables["id"],
                 tables["number"],
                 tables["value"],
-                tables["client_id"],
                 tables["place_id"],
             )
             self.database.cursor.execute(
-                "UPDATE tables SET number = ?, value = ?, client_id = ?, place_id = ? WHERE id = ?",
-                (number, value, client_id, place_id, id),
+                "UPDATE tables SET number = ?, value = ?, place_id = ? WHERE id = ?",
+                (number, value, place_id, id),
             )
             self.database.connection.commit()
             self.database.cursor.close()
@@ -295,3 +296,77 @@ class TableService:
             return "Table deleted successfully!", 200
         except Exception as e:
             return "Erro ao deletar table"
+
+
+class ReservationService:
+    def getReservation(self):
+        rows = self.database.cursor.execute(
+            """SELECT client.name as client_name, reservations.client_id, reservations.table_id, tables.number, places.name as place_name, reservations.date, reservations.id FROM  reservations
+                JOIN client ON reservations.client_id = client.id
+                JOIN tables ON reservations.table_id = tables.id
+                JOIN places ON tables.place_id = places.id
+                """
+        ).fetchall()
+        reservations = []
+        for row in rows:
+            d = collections.OrderedDict()
+            d["client_name"] = row[0]
+            d["client_id"] = row[1]
+            d["table_id"] = row[2]
+            d["number"] = row[3]
+            d["place_name"] = row[4]
+            d["date"] = row[5]
+            d["id"] = row[6]
+            reservations.append(d)
+
+        return reservations, 200
+
+    def createReservation(self, reservations):
+        try:
+            client_id, table_id, date = (
+                reservations["client_id"],
+                reservations["table_id"],
+                reservations["date"],
+            )
+            self.database.cursor.execute(
+                "INSERT INTO reservations (client_id, table_id, date) VALUES (?, ?, ?)  ",
+                (client_id, table_id, date),
+            )
+            self.database.connection.commit()
+            self.database.cursor.close()
+            return "Reservations created successfully!", 200
+        except Exception as e:
+            print(e)
+            return "Erro ao criar Reservations", 400
+
+    def updateReservation(self, reservations):
+        try:
+            (
+                id,
+                client_id,
+                table_id,
+                date,
+            ) = (
+                reservations["id"],
+                reservations["client_id"],
+                reservations["table_id"],
+                reservations["date"],
+            )
+            self.database.cursor.execute(
+                "UPDATE reservations SET client_id = ?, table_id = ?, date = ? WHERE id = ?",
+                (client_id, table_id, date, id),
+            )
+            self.database.connection.commit()
+            self.database.cursor.close()
+            return "Reservation updated successfully!", 200
+        except Exception as e:
+            return "Erro ao atualizar Reservation", 400
+
+    def deleteReservation(self, id):
+        try:
+            self.database.cursor.execute("DELETE FROM reservations WHERE id = ?", (id,))
+            self.database.connection.commit()
+            self.database.cursor.close()
+            return "Reservation deleted successfully!", 200
+        except Exception as e:
+            return "Erro ao deletar Reservation", 400

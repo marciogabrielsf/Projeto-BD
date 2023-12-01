@@ -1,3 +1,5 @@
+import { useCompanies } from "@/app/hooks/companies/queries";
+import { usePlaces } from "@/app/hooks/places/queries";
 import { getCompanies } from "@/app/services/companies.service";
 import { createPlace } from "@/app/services/places.service";
 import { ICompany } from "@/app/types";
@@ -10,17 +12,8 @@ interface Props {
 }
 
 export default function AddPlaceModal({ onRequestClose }: Props) {
-	const [companies, setCompanies] = useState<ICompany[]>([]);
-
-	useEffect(() => {
-		const getCompanyData = async () => {
-			const response = await getCompanies();
-			if (response) {
-				setCompanies(response.companies);
-			}
-		};
-		getCompanyData();
-	}, []);
+	const { refetch } = usePlaces();
+	const { data: companies } = useCompanies();
 
 	const [name, setName] = useState("");
 	const [address, setAddress] = useState("");
@@ -34,6 +27,7 @@ export default function AddPlaceModal({ onRequestClose }: Props) {
 
 		if (name && address && avgPrice && stars && selectedCompany) {
 			await createPlace(name, address, phone, avgPrice, stars, selectedCompany);
+			refetch();
 			onRequestClose();
 		} else {
 			alert("Preencha todos os campos!");
@@ -117,8 +111,8 @@ export default function AddPlaceModal({ onRequestClose }: Props) {
 						className="p-2 rounded-md bg-slate-800 w-full"
 					>
 						<option value="0">Selecione uma opção...</option>
-						{companies.map((company) => (
-							<option key={company.id} value={company.id}>
+						{companies?.map((company, index) => (
+							<option key={index} value={company.id}>
 								{company.name}
 							</option>
 						))}

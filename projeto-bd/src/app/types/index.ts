@@ -23,3 +23,21 @@ export interface IPlace {
 	stars: number;
 	company_id: number;
 }
+
+export interface ITable {
+	id: number;
+	number: number;
+	value: number;
+	place_id: number;
+	place_name: string;
+}
+
+export interface IReservation {
+	id: number;
+	client_name: string;
+	client_id: number;
+	number: number;
+	place_name: number;
+	table_id: number;
+	date: string;
+}

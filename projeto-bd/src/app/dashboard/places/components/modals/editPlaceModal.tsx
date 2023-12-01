@@ -4,6 +4,8 @@ import InputMask from "react-input-mask";
 import { updatePlace } from "@/app/services/places.service";
 import { getCompanies } from "@/app/services/companies.service";
 import { ICompany, IPlace } from "@/app/types";
+import { usePlaces } from "@/app/hooks/places/queries";
+import { useCompanies } from "@/app/hooks/companies/queries";
 
 interface Props {
 	onRequestClose: () => void;
@@ -11,17 +13,8 @@ interface Props {
 }
 
 export default function EditPlaceModal({ onRequestClose, place }: Props) {
-	const [companies, setCompanies] = useState<ICompany[]>([]);
-
-	useEffect(() => {
-		const getCompanyData = async () => {
-			const response = await getCompanies();
-			if (response) {
-				setCompanies(response.companies);
-			}
-		};
-		getCompanyData();
-	}, []);
+	const { refetch } = usePlaces();
+	const { data: companies } = useCompanies();
 
 	const [name, setName] = useState(place?.name);
 	const [address, setAddress] = useState(place?.address);
@@ -35,13 +28,12 @@ export default function EditPlaceModal({ onRequestClose, place }: Props) {
 
 		if (place && name && address && phone && avgPrice && stars && selectedCompany) {
 			await updatePlace(place.id, name, address, phone, avgPrice, stars, selectedCompany);
+			refetch();
 			onRequestClose();
 		} else {
 			alert("Preencha todos os campos!");
 		}
 	};
-
-	const onlyNumbers = (str: string) => str.replace(/[^0-9]/g, "");
 
 	return (
 		<div className="text-white w-[30rem] p-2 flex gap-3 flex-col">
@@ -118,8 +110,8 @@ export default function EditPlaceModal({ onRequestClose, place }: Props) {
 						className="p-2 rounded-md bg-slate-800 w-full"
 					>
 						<option value="0">Selecione uma opção...</option>
-						{companies.map((company) => (
-							<option key={company.id} value={company.id}>
+						{companies?.map((company, index) => (
+							<option key={index} value={company.id}>
 								{company.name}
 							</option>
 						))}

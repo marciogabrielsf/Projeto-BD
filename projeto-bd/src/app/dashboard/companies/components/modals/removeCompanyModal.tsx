@@ -1,3 +1,4 @@
+import { useCompanies } from "@/app/hooks/companies/queries";
 import { deleteCompany } from "@/app/services/companies.service";
 import { ICompany } from "@/app/types";
 import React, { useState } from "react";
@@ -9,10 +10,13 @@ interface Props {
 }
 
 export default function RemoveCompanyModal({ onRequestClose, data }: Props) {
+	const { refetch } = useCompanies();
+
 	const handleRemoveButton = async (e: React.MouseEvent) => {
 		e.preventDefault();
 		if (data) {
 			await deleteCompany(data.id);
+			refetch();
 			onRequestClose();
 		}
 	};

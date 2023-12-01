@@ -1,6 +1,11 @@
+import { IClient } from "../types";
 import api from "./api";
 
-export const getClients = async () => {
+interface IResponse {
+	clients: IClient[];
+}
+
+export const getClients = async (): Promise<IResponse> => {
 	const response = await api.get("/clients/");
 	return response.data;
 };

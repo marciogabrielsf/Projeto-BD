@@ -4,31 +4,18 @@ import Modal from "react-modal";
 import { defaultModalStyle } from "@/app/components/modalstyle";
 import AddCompanyModal from "./modals/addCompanyModal";
 import CompanyTable from "./companyTable";
-import { getCompanies } from "@/app/services/companies.service";
 import { ICompany } from "@/app/types";
 import { filterQuery } from "@/app/utils/filterQuery";
+import { useCompanies } from "@/app/hooks/companies/queries";
 
 export default function CompaniesContent() {
 	const [addModalIsOpen, setAddModalIsOpen] = useState(false);
 
-	const [companies, setCompanies] = useState<ICompany[]>([]);
+	const { data } = useCompanies();
 
 	const [query, setQuery] = useState("");
 
-	const filteredCompanies = filterQuery<ICompany>(companies, query);
-
-	const getCompanyData = async () => {
-		const response = await getCompanies();
-		if (response) {
-			setCompanies(response.companies);
-		}
-	};
-
-	useEffect(() => {
-		if (!addModalIsOpen) {
-			getCompanyData();
-		}
-	}, [addModalIsOpen]);
+	const filteredCompanies = filterQuery<ICompany>(data || [], query);
 
 	const handleModalOpen = () => setAddModalIsOpen(true);
 	const handleCloseModal = () => setAddModalIsOpen(false);
@@ -56,7 +43,7 @@ export default function CompaniesContent() {
 					</button>
 				</div>
 			</div>
-			<CompanyTable getCompanies={getCompanyData} companies={filteredCompanies} />
+			<CompanyTable companies={filteredCompanies} />
 		</div>
 	);
 }

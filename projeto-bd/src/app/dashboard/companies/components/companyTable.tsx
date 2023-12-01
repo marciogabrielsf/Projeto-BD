@@ -13,10 +13,9 @@ type ModalProps = {
 
 interface TableProps {
 	companies: ICompany[];
-	getCompanies: () => void;
 }
 
-export default function CompanyTable({ companies, getCompanies }: TableProps) {
+export default function CompanyTable({ companies }: TableProps) {
 	const hasContent = companies.length > 0;
 	const [removeModal, setRemoveModal] = useState<ModalProps>({
 		isOpen: false,
@@ -27,10 +26,6 @@ export default function CompanyTable({ companies, getCompanies }: TableProps) {
 		isOpen: false,
 		company: null,
 	});
-
-	useEffect(() => {
-		if (!removeModal.isOpen || !editModal.isOpen) getCompanies();
-	}, [removeModal, editModal]);
 
 	const handleRemoveModalOpen = (company: ICompany) => setRemoveModal({ isOpen: true, company });
 	const handleRemoveModalClose = () => setRemoveModal({ isOpen: false, company: null });
@@ -58,10 +53,10 @@ export default function CompanyTable({ companies, getCompanies }: TableProps) {
 						</tr>
 					</thead>
 					<tbody>
-						{companies.map((data) => (
+						{companies.map((data, index) => (
 							<tr
 								className="border-b-2 border-gray-700 [&>td]:py-3 [&>td]:overflow-clip "
-								key={data.id}
+								key={index}
 							>
 								<th scope="row" className="">
 									{data.name}

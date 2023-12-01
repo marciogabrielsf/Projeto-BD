@@ -5,6 +5,7 @@ import { MdClose } from "react-icons/md";
 import InputMask from "react-input-mask";
 import { ICompany } from "@/app/types";
 import { updateCompany } from "@/app/services/companies.service";
+import { useCompanies } from "@/app/hooks/companies/queries";
 
 interface Props {
 	onRequestClose: () => void;
@@ -12,11 +13,14 @@ interface Props {
 }
 
 export default function EditCompanyModal({ onRequestClose, company }: Props) {
+	const { refetch } = useCompanies();
+
 	const updateButton = async (e: React.MouseEvent) => {
 		e.preventDefault();
 
 		if (name && email && phone && cnpj && company) {
 			await updateCompany(company?.id, name, email, cnpj, phone);
+			refetch();
 			onRequestClose();
 		} else {
 			alert("Preencha todos os campos!");
