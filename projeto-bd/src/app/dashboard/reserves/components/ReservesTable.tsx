@@ -61,7 +61,7 @@ export default function ReservesTable({ reserves }: TableProps) {
 								<td>{data.number}</td>
 								<td>{data.client_name}</td>
 								<td>{data.place_name}</td>
-								<td>{data.date}</td>
+								<td>{new Date(data.date).toLocaleString()}</td>
 								<td>
 									<div className="flex gap-3 [&>button:hover]:text-primary [&>button]:transition">
 										<button onClick={() => handleEditModalOpen(data)}>

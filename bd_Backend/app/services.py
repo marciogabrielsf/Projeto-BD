@@ -1,6 +1,6 @@
 from app.config import DatabaseConnection
 import collections
-
+    
 
 class ClientService:
     def getClients(self):

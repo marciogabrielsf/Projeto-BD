@@ -45,50 +45,51 @@ export default function ClientsTable({ clients }: ClientsTableProps) {
 			</Modal>
 
 			{!isLoading && isSuccess ? (
-				<table className="w-full text-left text-sm table-fixed">
-					<thead className="border-b-2 uppercase border-gray-800 text-gray-400">
-						<tr>
-							<th scope="col">Nome</th>
-							<th scope="col">E-mail</th>
-							<th scope="col">Telefone</th>
-							<th scope="col">Cpf</th>
-							<th scope="col">Ações</th>
-						</tr>
-					</thead>
-					<tbody>
-						{clients.map((data, index) => (
-							<tr
-								className="border-b-2 border-gray-700 [&>td]:py-3 [&>td]:overflow-clip "
-								key={index}
-							>
-								<th scope="row" className="">
-									{data.name}
-								</th>
-								<td>{data.email}</td>
-								<td>{data.phone}</td>
-								<td>{data.cpf}</td>
-								<td>
-									<div className="flex gap-3 [&>button:hover]:text-primary [&>button]:transition">
-										<button onClick={() => handleEditModalOpen(data)}>
-											<BiSolidPencil size={20} />
-										</button>
-										<button onClick={() => handleRemoveModalOpen(data)}>
-											<BiTrash size={20} />
-										</button>
-									</div>
-								</td>
+				hasContent ? (
+					<table className="w-full text-left text-sm table-fixed">
+						<thead className="border-b-2 uppercase border-gray-800 text-gray-400">
+							<tr>
+								<th scope="col">Nome</th>
+								<th scope="col">E-mail</th>
+								<th scope="col">Telefone</th>
+								<th scope="col">Cpf</th>
+								<th scope="col">Ações</th>
 							</tr>
-						))}
-					</tbody>
-				</table>
+						</thead>
+						<tbody>
+							{clients.map((data, index) => (
+								<tr
+									className="border-b-2 border-gray-700 [&>td]:py-3 [&>td]:overflow-clip "
+									key={index}
+								>
+									<th scope="row" className="">
+										{data.name}
+									</th>
+									<td>{data.email}</td>
+									<td>{data.phone}</td>
+									<td>{data.cpf}</td>
+									<td>
+										<div className="flex gap-3 [&>button:hover]:text-primary [&>button]:transition">
+											<button onClick={() => handleEditModalOpen(data)}>
+												<BiSolidPencil size={20} />
+											</button>
+											<button onClick={() => handleRemoveModalOpen(data)}>
+												<BiTrash size={20} />
+											</button>
+										</div>
+									</td>
+								</tr>
+							))}
+						</tbody>
+					</table>
+				) : (
+					<div className="flex h-full justify-center items-center">
+						<p>Nenhum cliente encontrado</p>
+					</div>
+				)
 			) : (
 				<div className="flex h-full justify-center items-center">
 					<p className="">Carregando...</p>
-				</div>
-			)}
-			{!isLoading && isSuccess && !hasContent && (
-				<div className="flex h-full justify-center items-center">
-					<p className="">Nenhum cliente encontrado</p>
 				</div>
 			)}
 		</div>

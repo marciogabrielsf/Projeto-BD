@@ -38,6 +38,7 @@ class DatabaseConnection:
             stars INTEGER,
             company_id INTEGER NOT NULL,
             FOREIGN KEY (company_id) REFERENCES companies (id)
+            ON DELETE SET NULL
             )
             """
         )
@@ -48,6 +49,7 @@ class DatabaseConnection:
                 value INTEGER NOT NULL,
                 place_id INTEGER NOT NULL,
                 FOREIGN KEY (place_id) REFERENCES places (id)
+                ON DELETE SET NULL
             )
             """
         )
@@ -58,8 +60,8 @@ class DatabaseConnection:
             client_id INTEGER NOT NULL,
             table_id INTEGER NOT NULL,
             date TEXT NOT NULL,
-            FOREIGN KEY (client_id) REFERENCES client (id),
-            FOREIGN KEY (table_id) REFERENCES tables (id)
+            FOREIGN KEY (client_id) REFERENCES client (id) ON DELETE SET NULL,
+            FOREIGN KEY (table_id) REFERENCES tables (id) ON DELETE SET NULL
             )
             """
         )
